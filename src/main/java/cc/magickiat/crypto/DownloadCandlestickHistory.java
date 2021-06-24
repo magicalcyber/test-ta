@@ -17,13 +17,15 @@ public class DownloadCandlestickHistory {
                 System.getenv("BINANCE_API_KEY"), System.getenv("BINANCE_API_SECRET"));
         BinanceApiRestClient restClient = factory.newRestClient();
 
-        List<Candlestick> candlestickBars = restClient.getCandlestickBars("BTCBUSD",
-                CandlestickInterval.FIVE_MINUTES, 1000, null, null);
+//        List<Candlestick> candlestickBars = restClient.getCandlestickBars("BTCBUSD",
+//                CandlestickInterval.FIVE_MINUTES, 1000, null, null);
+        List<Candlestick> candlestickBars = restClient.getCandlestickBars("BTCUSDT",
+                CandlestickInterval.HOURLY);
         candlestickBars.remove(candlestickBars.size() - 1);
 
         System.out.println("Found: " + candlestickBars.size());
 
-        File output = new File("output", "btcbusd-5m.csv");
+        File output = new File("output", "btcusdt-1h.csv");
         System.out.println("Begin write to file ");
         try (PrintWriter writer = new PrintWriter(output)) {
             for (Candlestick bar : candlestickBars) {

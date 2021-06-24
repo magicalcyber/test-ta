@@ -23,8 +23,8 @@ public class TestSuperTrend {
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
 
     public static void main(String[] args) throws FileNotFoundException {
-        BarSeries series = new BaseBarSeriesBuilder().withName("BTCBUSD").build();
-        HistoryTrade historyTrade = new HistoryTrade("output/btcbusd-5m.csv");
+        BarSeries series = new BaseBarSeriesBuilder().withName("BTCUSDT").build();
+        HistoryTrade historyTrade = new HistoryTrade("output/btcusdt-1h.csv");
 
         List<Date> dateList = historyTrade.getDateList();
 
@@ -44,7 +44,7 @@ public class TestSuperTrend {
         }
 
 
-        final int ATR_PERIOD = 7;
+        final int ATR_PERIOD = 10;
         final Num FACTOR = DecimalNum.valueOf(3);
 
         ATRIndicator atr = new ATRIndicator(series, ATR_PERIOD);
@@ -105,7 +105,13 @@ public class TestSuperTrend {
                     trendValue = trendDown;
                 }
 
-                logger.info(sdf.format(dateList.get(i)) + " ===> " + (trend == 1 ? "UP.." : "DOWN") + "\t" + trendValue);
+                boolean buySignal = prevTrend == -1 && trend == 1;
+                boolean sellSignal = prevTrend == 1 && trend == -1;
+
+                logger.info(sdf.format(dateList.get(i)) + " ===> "
+                        + (trend == 1 ? "UP.." : "DOWN")
+                        + "\t" + trendValue
+                        + (buySignal ? "\t<<< Stop SELL and begin BUY!!" : sellSignal ? "\t<<<Stop BUY and begin SELL!!!" : ""));
 
                 prevTrend = trend;
             }
